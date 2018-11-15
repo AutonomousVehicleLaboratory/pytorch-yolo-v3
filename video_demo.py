@@ -124,7 +124,10 @@ if __name__ == '__main__':
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         out = cv2.VideoWriter(args.save_to, fourcc, 20.0, (640, 480))
 
-    display_avail = os.environ['DISPLAY']
+    try:
+        display_avail = os.environ['DISPLAY']
+    except KeyError:
+        display_avail = False
 
     frames = 0
     start = time.time()    

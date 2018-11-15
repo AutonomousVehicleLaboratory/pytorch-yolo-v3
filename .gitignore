@@ -100,3 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 .idea
+demo.avi
+download?file=d3i8d3d3i8j9c2
+yolov3.weights

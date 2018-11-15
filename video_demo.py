@@ -78,6 +78,7 @@ def arg_parse():
     parser.add_argument("--reso", dest = 'reso', help = 
                         "Input resolution of the network. Increase to increase accuracy. Decrease to increase speed",
                         default = "416", type = str)
+    parser.add_argument("--save_to", type=str, default='')
     return parser.parse_args()
 
 
@@ -117,7 +118,11 @@ if __name__ == '__main__':
     cap = cv2.VideoCapture(videofile)
     
     assert cap.isOpened(), 'Cannot capture source'
-    
+
+    if args.save_to:
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter(args.save_to, fourcc, 20.0, (640, 480))
+
     frames = 0
     start = time.time()    
     while cap.isOpened():
@@ -168,8 +173,11 @@ if __name__ == '__main__':
             
             list(map(lambda x: write(x, orig_im), output))
             
-            
-            cv2.imshow("frame", orig_im)
+            if args.save_to:
+                out.write(orig_im)
+            else:
+                cv2.imshow("frame", orig_im)
+
             key = cv2.waitKey(1)
             if key & 0xFF == ord('q'):
                 break

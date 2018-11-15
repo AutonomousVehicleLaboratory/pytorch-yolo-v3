@@ -124,6 +124,12 @@ if __name__ == '__main__':
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         out = cv2.VideoWriter(args.save_to, fourcc, 20.0, (640, 480))
 
+    if args.save_to:
+        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+
+        # Set out to None so that we can set the image width and height after seeing the first frame
+        out = None
+
     try:
         display_avail = os.environ['DISPLAY']
     except KeyError:
@@ -135,13 +141,15 @@ if __name__ == '__main__':
         
         ret, frame = cap.read()
         if ret:
-            
 
             img, orig_im, dim = prep_image(frame, inp_dim)
-            
-            im_dim = torch.FloatTensor(dim).repeat(1,2)                        
-            
-            
+
+            if args.save_to:
+                if out is None:
+                    out = cv2.VideoWriter(args.save_to, fourcc, 30.0, (orig_im.shape[1], orig_im.shape[0]), isColor=3)
+
+            im_dim = torch.FloatTensor(dim).repeat(1,2)
+
             if CUDA:
                 im_dim = im_dim.cuda()
                 img = img.cuda()
@@ -161,9 +169,6 @@ if __name__ == '__main__':
                 if key & 0xFF == ord('q'):
                     break
                 continue
-            
-            
-
             
             im_dim = im_dim.repeat(output.size(0), 1)
             scaling_factor = torch.min(inp_dim/im_dim,1)[0].view(-1,1)

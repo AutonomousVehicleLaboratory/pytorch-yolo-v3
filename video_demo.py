@@ -12,6 +12,7 @@ import pandas as pd
 import random 
 import pickle as pkl
 import argparse
+import os
 
 
 def get_test_input(input_dim, CUDA):
@@ -123,6 +124,8 @@ if __name__ == '__main__':
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         out = cv2.VideoWriter(args.save_to, fourcc, 20.0, (640, 480))
 
+    display_avail = os.environ['DISPLAY']
+
     frames = 0
     start = time.time()    
     while cap.isOpened():
@@ -147,7 +150,10 @@ if __name__ == '__main__':
             if type(output) == int:
                 frames += 1
                 print("FPS of the video is {:5.2f}".format( frames / (time.time() - start)))
-                cv2.imshow("frame", orig_im)
+
+                if display_avail:
+                    cv2.imshow("frame", orig_im)
+
                 key = cv2.waitKey(1)
                 if key & 0xFF == ord('q'):
                     break
@@ -175,7 +181,7 @@ if __name__ == '__main__':
             
             if args.save_to:
                 out.write(orig_im)
-            else:
+            elif display_avail:
                 cv2.imshow("frame", orig_im)
 
             key = cv2.waitKey(1)

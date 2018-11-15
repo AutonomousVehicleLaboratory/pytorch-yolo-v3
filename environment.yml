@@ -48,8 +48,8 @@ dependencies:
   - pip:
     - opencv-python==3.4.3.18
     - torch==0.4.1
-    - libgfortran=3.0.1
-    - libcxxabi=4.0.1
-    - libcxx=4.0.1
+    - libgfortran==3.0.1
+    - libcxxabi==4.0.1
+    - libcxx==4.0.1
 prefix: /Users/QV/miniconda3/envs/yolo3_pt
 
